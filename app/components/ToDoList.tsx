@@ -16,7 +16,7 @@ export default function ToDoList({list}: {list: List[]}) {
         setListData([...listdata])
     }
 
-    const AddList = () => {
+    const AddList = async () => {
         // console.log(newList)
         if(newList === '') return
         const newId = listdata.length + 1
@@ -26,6 +26,16 @@ export default function ToDoList({list}: {list: List[]}) {
             completed: false
         }
         setListData([...listdata, newItem])
+        setNewList('')
+
+        await fetch('/api/lists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({title: newList}),
+        })
+        .then((response) => response.json())   
     }
 
     const DeletList = (id: number) => {
