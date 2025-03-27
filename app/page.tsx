@@ -1,25 +1,32 @@
 import Image from "next/image";
 import ToDoList from "./components/ToDoList";
 
-export default function Home() {
+export default async function Home() {
 
-  const list = [
-    {
-      id: 1,
-      title: "Task 1",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "Task 2",
-      completed: true,
-    },
-    {
-      id: 3,
-      title: "Task 3",
-      completed: false,
-    },
-  ]
+  const data = await fetch("http://localhost:3000/api/lists" , {
+    method: "GET",
+    
+  })
+  const list = await data.json()
+  // const list = [
+  //   {
+  //     id: 1,
+  //     title: "Task 1",
+  //     completed: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Task 2",
+  //     completed: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Task 3",
+  //     completed: false,
+  //   },
+  // ]
+
+  // console.log(list)
 
   return (
     <div className=" items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
