@@ -2,11 +2,17 @@
 import React, { useState } from 'react'
 import List from '../types/listtype'
 
+function dynamicSort(property : string) {
+    return function(a : any, b : any) {
+        return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    }
+ }
+
 export default function ToDoList({list}: {list: List[]}) {
     const [listdata , setListData] = useState(list)
     const [newList , setNewList] = useState('')
-
-    const ListCheck = (e: React.ChangeEvent<HTMLInputElement> , id : number) => {
+    // console.log(listdata)
+    const ListCheck = async (e: React.ChangeEvent<HTMLInputElement> , id : number) => {
         // console.log(e.target.checked)
         const currentItem = listdata.find((item) => item.id === id)
         if (currentItem) {
@@ -14,7 +20,16 @@ export default function ToDoList({list}: {list: List[]}) {
         }
         
         setListData([...listdata])
-    }
+
+        await fetch(`/api/lists/checklist/${id}`, {
+            method:'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({completed: e.target.checked}),   
+        }
+        )
+        .then((response) => response.json())}
 
     const AddList = async () => {
         // console.log(newList)
@@ -25,7 +40,7 @@ export default function ToDoList({list}: {list: List[]}) {
             title: newList,
             completed: false
         }
-        setListData([...listdata, newItem])
+        setListData([ newItem , ...listdata])
         setNewList('')
 
         await fetch('/api/lists', {
