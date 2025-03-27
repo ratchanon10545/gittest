@@ -48,7 +48,7 @@ export default function ToDoList({list}: {list: List[]}) {
     }
 
     const EditList = (id: number) => {
-        return () => {
+        return async () => {
             const currentItem = listdata.find((item) => item.id === id)
             if (currentItem) {
                 let text;
@@ -59,9 +59,20 @@ export default function ToDoList({list}: {list: List[]}) {
                     text = newTitle;
                 }
                 currentItem.title = text
-                console.log(listdata)
+                // console.log(listdata)
                 setListData([...listdata])
-               
+
+                await fetch(`/api/lists/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({title: text}),
+                })
+                .then((response) => response.json())   
+            }
+            else{
+                return ''
             }
         }
     }
