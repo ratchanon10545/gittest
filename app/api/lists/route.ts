@@ -4,6 +4,7 @@ import connection from '@/lib/db';
 export async function GET(request: Request) {
     try {
         const [rows] = await (await connection).execute("SELECT * FROM list");
+        
         return NextResponse.json(rows);
       } catch (error) {
         console.error("Database Error:", error);
@@ -16,6 +17,7 @@ export async function POST(request: Request) {
     const { title } = await request.json();
     try {
         await (await connection).execute("INSERT INTO list (title) VALUES (?)", [title]);
+        
         return NextResponse.json({ success: true });
       } catch (error) {
         console.error("Database Error:", error);

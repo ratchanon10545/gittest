@@ -40,10 +40,15 @@ export default function ToDoList({list}: {list: List[]}) {
 
     const DeletList = (id: number) => {
         // alert('Are you sure you want to delete this task?')
-        return () => {
+        return async () => {
             alert('Are you sure you want to delete this task?')
             const newList = listdata.filter((item) => item.id !== id)
             setListData(newList)
+
+            await fetch(`/api/lists/${id}`, {
+                method: 'DELETE',
+            })
+            .then((response) => response.json())
         }
     }
 
